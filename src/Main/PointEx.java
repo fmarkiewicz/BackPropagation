@@ -10,5 +10,13 @@ package Main;
  * @author Hayab_000
  */
 public class PointEx {
+    float x;
+    float y;
+
+    public PointEx(float x, float y) {
+        this.x = x;
+        this.y = y;
+    }
+    
     
 }

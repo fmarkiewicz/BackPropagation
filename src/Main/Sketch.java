@@ -27,9 +27,9 @@ public class Sketch extends PApplet {
 
     ButtonFunctions btn = new ButtonFunctions();
     List<MyButton> buttonList = new ArrayList<>();
-    static List<MyCircle> dotList = new ArrayList<>();
-    static List<MyCircle> graphList = new ArrayList<>();
     static List<Field> fieldList = new ArrayList<>();
+    public static List<Example> examplesList = new ArrayList<>();
+    MyRobot robot = new MyRobot();
 
     static public void main(String args[]) {
         PApplet.main(new String[]{"Main.Sketch"});
@@ -41,7 +41,6 @@ public class Sketch extends PApplet {
 
         buttonList.add(new MyButton("random", this));
         buttonList.add(new MyButton("start", this));
-        buttonList.add(new MyButton("clear", this));
 
         for (int i = 0; i < buttonList.size(); i++) {
             MyButton but = buttonList.get(i);
@@ -79,26 +78,16 @@ public class Sketch extends PApplet {
 
     void update(int x, int y) {
         if (fieldList.get(0).clicked(x, y)) {
-            MyCircle c = new MyCircle(this, x, y, 8, 8);
-            c.display();
-            dotList.add(c);
+            fieldList.get(0).display();
+            for (Example ex : examplesList) {
+                robot.drawHand(ex, this);
+            }
         } else {
             for (MyButton but : buttonList) {
                 if (but.clicked(x, y)) {
                     clearButtonClicked();
                     but.func();
                     but.displayClicked();
-
-                    if (but.funcName.equals("random") || but.funcName.equals("start")) {
-                        // cause I have to manualy pass "this" instance to 
-                        // graph points to display it
-                        Sketch.fieldList.get(0).display();
-                        for (MyCircle c : Sketch.dotList) {
-                            c.display();
-                        }
-                        drawGraph();
-                    }
-//                    break;
                 }
             }
         }
@@ -111,19 +100,6 @@ public class Sketch extends PApplet {
             int a = (int) key - 48;
             System.out.println(a);
 
-        }
-    }
-
-    public void drawGraph() {
-        graphList.get(0).setAplet(this);
-        graphList.get(0).display();
-        for (int i = 1; i < graphList.size(); i++) {
-            MyCircle c = graphList.get(i);
-            MyCircle prevC = graphList.get(i - 1);
-            c.setAplet(this);
-            c.display();
-            stroke(126);
-            line(c.x, c.y, prevC.x, prevC.y);
         }
     }
 
