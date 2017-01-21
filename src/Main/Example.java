@@ -11,10 +11,10 @@ package Main;
  */
 public class Example {
     public PointEx point;
-    public float angle1;
-    public float angle2;
+    public double angle1;
+    public double angle2;
 
-    public Example(PointEx point, float angle1, float angle2) {
+    public Example(PointEx point, double angle1, double angle2) {
         this.point = point;
         this.angle1 = angle1;
         this.angle2 = angle2;

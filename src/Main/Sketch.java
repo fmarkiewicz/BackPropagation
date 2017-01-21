@@ -12,8 +12,12 @@ import processing.core.PApplet;
 
 public class Sketch extends PApplet {
 
+    int numberOfHiddenLayers = 2;
+    int numberOfNeuronsForHiddenLayer = 10;
+
     static int graphPointsAmount = 15;
     static int T = 100000;
+    static double learnStatic = 0.002;
 
     int buttonsX = 10;
     int buttonsY = 500;
@@ -26,10 +30,12 @@ public class Sketch extends PApplet {
     static final int FIELD_HEIGHT = 450;
 
     ButtonFunctions btn = new ButtonFunctions();
-    List<MyButton> buttonList = new ArrayList<>();
+    static List<MyButton> buttonList = new ArrayList<>();
     static List<Field> fieldList = new ArrayList<>();
     public static List<Example> examplesList = new ArrayList<>();
     MyRobot robot = new MyRobot();
+    public static List<List<Perceptron>> network = new ArrayList<>();
+    MyButton tmpButton;
 
     static public void main(String args[]) {
         PApplet.main(new String[]{"Main.Sketch"});
@@ -39,8 +45,55 @@ public class Sketch extends PApplet {
     public void setup() {
         textSize(25);
 
+        List<Perceptron> inputLayer = new ArrayList<>();
+        List<Perceptron> outputLayer = new ArrayList<>();
+        // LOSOWANIE WAG
+        // tworzenie warstwy wejsciowej
+        for (int i = 0; i < 3; i++) {
+            inputLayer.add(new Perceptron(numberOfNeuronsForHiddenLayer));
+            //ustawianie biasu
+            if (i == 2) {
+                inputLayer.get(i).setA(1);
+            }
+        }
+        network.add(inputLayer);
+
+        // tworzenie ostatniej warstwy
+        for (int i = 0; i < 2; i++) {
+            outputLayer.add(new Perceptron(0));
+        }
+
+        // uzupelnianie ukrytych warstw
+        for (int i = 0; i < numberOfHiddenLayers; i++) {
+            List<Perceptron> hiddenLayer = new ArrayList<>();
+            // warunek sprawdzajacy czy to ostatnia z ukrytych warstw
+            if (i == numberOfHiddenLayers - 1) {
+                for (int j = 0; j < numberOfNeuronsForHiddenLayer; j++) {
+                    hiddenLayer.add(new Perceptron(2));
+                    //ustawianie biasu
+                    if (j == numberOfNeuronsForHiddenLayer - 1) {
+                        hiddenLayer.get(j).setA(1);
+                    }
+                }
+            } else {
+                for (int j = 0; j < numberOfNeuronsForHiddenLayer; j++) {
+                    hiddenLayer.add(new Perceptron(numberOfNeuronsForHiddenLayer));
+                    //ustawianie biasu
+                    if (j == numberOfNeuronsForHiddenLayer - 1) {
+                        hiddenLayer.get(j).setA(1);
+                    }
+                }
+            }
+            network.add(hiddenLayer);
+        }
+        network.add(outputLayer);
+
         buttonList.add(new MyButton("random", this));
-        buttonList.add(new MyButton("start", this));
+        buttonList.add(new MyButton("learn", this));
+//        tmpButton = new MyButton("learn", this);
+//        tmpButton.setCoordinates(10, 600, 30, 50);
+//        tmpButton.display();
+        buttonList.add(new MyButton("", this));
 
         for (int i = 0; i < buttonList.size(); i++) {
             MyButton but = buttonList.get(i);
@@ -82,6 +135,8 @@ public class Sketch extends PApplet {
             for (Example ex : examplesList) {
                 robot.drawHand(ex, this);
             }
+//        } else if (tmpButton.clicked(x, y)) {
+//            ButtonFunctions.learn();
         } else {
             for (MyButton but : buttonList) {
                 if (but.clicked(x, y)) {

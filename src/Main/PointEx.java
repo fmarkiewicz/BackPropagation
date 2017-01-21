@@ -10,10 +10,10 @@ package Main;
  * @author Hayab_000
  */
 public class PointEx {
-    float x;
-    float y;
+    double x;
+    double y;
 
-    public PointEx(float x, float y) {
+    public PointEx(double x, double y) {
         this.x = x;
         this.y = y;
     }

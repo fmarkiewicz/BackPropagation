@@ -24,14 +24,17 @@ public class MyButton extends Sketch {
     ButtonFunctions btnFnctInstance = new ButtonFunctions();
     private PApplet aplet;
     int clickColor = 126;
+    String val = "";
 
     public MyButton(String funcName, PApplet aplet) {
         this.funcName = funcName;
         this.aplet = aplet;
-        try {
-            this.method = btnFnctInstance.getClass().getDeclaredMethod(funcName, null);
-        } catch (NoSuchMethodException | SecurityException ex) {
-            Logger.getLogger(Sketch.class.getName()).log(Level.SEVERE, null, ex);
+        if (!funcName.equals("")) {
+            try {
+                this.method = btnFnctInstance.getClass().getDeclaredMethod(funcName, null);
+            } catch (NoSuchMethodException | SecurityException ex) {
+                Logger.getLogger(Sketch.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
@@ -43,11 +46,21 @@ public class MyButton extends Sketch {
     }
 
     public void func() {
-        try {
-            method.invoke(btnFnctInstance, (Object[]) null);
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-            Logger.getLogger(Sketch.class.getName()).log(Level.SEVERE, null, ex);
+        if (!funcName.isEmpty()) {
+            try {
+                method.invoke(btnFnctInstance, null);
+            } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+                Logger.getLogger(Sketch.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+    }
+
+    public void displayVal() {
+        aplet.stroke(255);
+        aplet.fill(204, 102, 0);
+        aplet.rect(x, y, btnWidth, btnHeight);
+        aplet.fill(100, 100, 255);
+        aplet.text(val, (int) (x + btnWidth / 4), (int) (y + btnHeight - btnHeight / 4));
     }
 
     public void display() {
@@ -70,4 +83,7 @@ public class MyButton extends Sketch {
         return Calculations.isOverRec(x, y, btnWidth, btnHeight, mouseX, mouseY);
     }
 
+    public void setVal(String val) {
+        this.val = val;
+    }
 }
