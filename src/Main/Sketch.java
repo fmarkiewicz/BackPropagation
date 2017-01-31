@@ -16,9 +16,11 @@ public class Sketch extends PApplet {
     int numberOfNeuronsForHiddenLayer = 10;
 
     static int graphPointsAmount = 15;
-    static int T = 100000;
+    static int T = 1000000;
     static double learnStatic = 0.002;
-
+    static double xMax;
+    static double yMax;
+    
     int buttonsX = 10;
     int buttonsY = 500;
     int buttonsHeight = 30;
@@ -29,13 +31,13 @@ public class Sketch extends PApplet {
     static final int FIELD_WIDTH = 500;
     static final int FIELD_HEIGHT = 450;
 
-    ButtonFunctions btn = new ButtonFunctions();
     static List<MyButton> buttonList = new ArrayList<>();
     static List<Field> fieldList = new ArrayList<>();
     public static List<Example> examplesList = new ArrayList<>();
     MyRobot robot = new MyRobot();
     public static List<List<Perceptron>> network = new ArrayList<>();
     MyButton tmpButton;
+    MyButton showExamples;
 
     static public void main(String args[]) {
         PApplet.main(new String[]{"Main.Sketch"});
@@ -90,8 +92,9 @@ public class Sketch extends PApplet {
 
         buttonList.add(new MyButton("random", this));
         buttonList.add(new MyButton("learn", this));
+
 //        tmpButton = new MyButton("learn", this);
-//        tmpButton.setCoordinates(10, 600, 30, 50);
+//        tmpButton.setCoordinates(10, 600, 30, 300);
 //        tmpButton.display();
         buttonList.add(new MyButton("", this));
 
@@ -132,9 +135,19 @@ public class Sketch extends PApplet {
     void update(int x, int y) {
         if (fieldList.get(0).clicked(x, y)) {
             fieldList.get(0).display();
-            for (Example ex : examplesList) {
-                robot.drawHand(ex, this);
-            }
+            
+            PointEx point = new PointEx((double)x/xMax, (double)y/yMax);
+            Example answer = ButtonFunctions.answer(point);
+            robot.drawHand(Example.getExample(answer), this);
+            
+//            PointEx point = new PointEx((double)x, (double)y);
+//            Example answer = ButtonFunctions.answer(point);
+//            robot.drawHand(answer, this);
+            
+
+//            for (Example ex : examplesList) {
+//                robot.drawHand(ex, this);
+//            }
 //        } else if (tmpButton.clicked(x, y)) {
 //            ButtonFunctions.learn();
         } else {
