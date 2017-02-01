@@ -12,7 +12,7 @@ package Main;
 public class Calculations {
 
     public static double sigmoid(double x) {
-        return  1 / (1 + Math.exp(x));
+        return 1d / (1d + Math.exp(-x));
     }
 
     public static boolean isOverRec(int x, int y, int width, int height, int mouseX, int mouseY) {

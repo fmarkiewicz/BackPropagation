@@ -14,8 +14,7 @@ public class Sketch extends PApplet {
 
     int numberOfHiddenLayers = 2;
     int numberOfNeuronsForHiddenLayer = 10;
-
-    static int graphPointsAmount = 15;
+    
     static int T = 1000000;
     static double learnStatic = 0.002;
     static double xMax;

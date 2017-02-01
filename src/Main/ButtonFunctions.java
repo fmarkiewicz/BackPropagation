@@ -49,16 +49,16 @@ public class ButtonFunctions {
     static private void deltaForHiddenLayers() {
         for (int j = Sketch.network.size() - 2; j > 0; j--) {
             //dla kazdego neuronu w warstwie
-            for (int k = 0; k < Sketch.network.get(j).size() - 1; k++) {
+            for (int k = 0; k < Sketch.network.get(j).size(); k++) {
                 //oblicz delte
                 double delta = 0;
                 double out = Sketch.network.get(j).get(k).out;
                 double sum = 0;
 
                 // policz sume wagi razy delty z wyzszej warstwy
-                for (int m = 0; m < Sketch.network.get(j + 1).size() - 1; m++) {
+                for (int m = 0; m < Sketch.network.get(j + 1).size(); m++) {
                     double weight = Sketch.network.get(j).get(k).weights[m];
-                    double deltaBefore = Sketch.network.get(j).get(k).delta;
+                    double deltaBefore = Sketch.network.get(j+1).get(m).delta;
                     sum += weight * deltaBefore;
                 }
                 delta = sum * out * (1 - out);
@@ -115,8 +115,8 @@ public class ButtonFunctions {
     public static Example answer(PointEx point) {
         setPointInNetwork(point);
         feedForward();
-        double angle1 = Sketch.network.get(3).get(0).a;
-        double angle2 = Sketch.network.get(3).get(1).a;
+        double angle1 = Sketch.network.get(3).get(0).out;
+        double angle2 = Sketch.network.get(3).get(1).out;
         return new Example(point, (angle1), (angle2));
     }
 
